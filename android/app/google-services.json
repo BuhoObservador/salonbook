@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "33345724626",
+    "project_id": "stylebook-5d698",
+    "storage_bucket": "stylebook-5d698.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:33345724626:android:cd33036fa2ee9f52e38d0b",
+        "android_client_info": {
+          "package_name": "com.mateo.salonbook"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAhW515qLTLJQcyiaTkDaImiLERW7cnSYE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
