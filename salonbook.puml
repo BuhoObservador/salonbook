@@ -1,0 +1,1084 @@
+@startuml
+set namespaceSeparator ::
+
+class "salonbook::models::appointment.dart::Appointment" {
+  +String id
+  +String userId
+  +String serviceId
+  +DateTime date
+  +String timeSlot
+  +String status
+  +String? notes
+  +DateTime createdAt
+  +String? userName
+  +String? serviceName
+  +double? servicePrice
+  +int? serviceDuration
+  +Map<String, dynamic> toMap()
+}
+
+class "salonbook::models::model.dart::Model" {
+  +FirebaseFirestore fbStore
+  +FirebaseAuth auth
+  +PageController pageController
+  -bool _isProcessing
+  -User? _user
+  -String _name
+  -String _str
+  -List<String> _userInfo
+  -List<Service> _services
+  -List<Appointment> _userAppointments
+  -List<Appointment> _todayAppointments
+  -SalonInfo? _salonInfo
+  -List<Product> _products
+  -List<Category> _categories
+  -List<CartItem> _cartItems
+  -List<ItemsOrder> _userOrders
+  -List<ItemsOrder> _allOrders
+  {static} -String _salonOpenTime
+  {static} -String _salonCloseTime
+  {static} -int _slotDurationMinutes
+  {static} -List<int> _operatingDays
+  +bool isProcessing
+  +String name
+  +String str
+  +User? user
+  +List<String> userInfo
+  +List<Service> services
+  +List<Appointment> userAppointments
+  +List<Appointment> todayAppointments
+  +SalonInfo? salonInfo
+  +List<Product> products
+  +List<Category> categories
+  +List<CartItem> cartItems
+  +List<ItemsOrder> userOrders
+  +List<ItemsOrder> allOrders
+  +double cartTotal
+  +int cartItemCount
+  +void navigateToTab()
+  +void dispose()
+  +dynamic processingData()
+  +dynamic signIn()
+  +dynamic register()
+  +dynamic cleanVar()
+  +dynamic signOut()
+  +dynamic resetPassword()
+  +void showSnackbar()
+  +void hideSnackbar()
+  +dynamic addUserInfo()
+  +dynamic getUserInfo()
+  +dynamic isUserAdmin()
+  +dynamic updateUserProfile()
+  +dynamic getServices()
+  +dynamic getServicesForGender()
+  +dynamic getServiceById()
+  +dynamic createAppointment()
+  -dynamic _updateTimeSlotsAfterBooking()
+  +dynamic getUserAppointments()
+  +dynamic cancelAppointment()
+  -dynamic _updateTimeSlotsAfterCancellation()
+  -bool _isToday()
+  -bool _isTimeSlotInPast()
+  +dynamic getAvailableTimeSlots()
+  -dynamic _generateSlotsOnDemand()
+  -List<String> _getEmergencyTimeSlots()
+  -dynamic _getBookedTimeSlots()
+  -List<String> _generateAvailableTimeSlots()
+  -DateTime _parseTimeString()
+  -String _formatTimeOfDay()
+  +dynamic getSalonInfo()
+  +dynamic getTodayAppointments()
+  +dynamic getAppointmentsByDate()
+  +dynamic updateAppointmentStatus()
+  +dynamic createAppointmentByAdmin()
+  +dynamic addService()
+  +dynamic updateService()
+  +dynamic toggleServiceStatus()
+  -dynamic _processAppointments()
+  +dynamic getCategories()
+  +dynamic addCategory()
+  +dynamic updateCategory()
+  +dynamic deleteCategory()
+  +dynamic getProducts()
+  +dynamic getFeaturedProducts()
+  +dynamic getProductById()
+  +dynamic addProduct()
+  +dynamic updateProduct()
+  +dynamic updateProductStock()
+  +dynamic toggleProductStatus()
+  +void addToCart()
+  +void updateCartItemQuantity()
+  +void removeFromCart()
+  +void clearCart()
+  -void _saveCartToLocal()
+  +dynamic loadCartFromLocal()
+  +dynamic createOrder()
+  +dynamic getUserOrders()
+  +dynamic getAllOrders()
+  +dynamic updateOrderStatus()
+  +dynamic updatePaymentStatus()
+  +dynamic searchProducts()
+  +List<Product> filterProducts()
+  +dynamic getStoreAnalytics()
+  +dynamic generate3MonthsTimeSlots()
+  -dynamic _generateDaySlotsAndStore()
+  -List<String> _generateTimeSlotsForDay()
+  -bool _canServiceFitInSlot()
+  -dynamic _updateTimeSlotsForBooking()
+  -List<String> _calculateOccupiedSlots()
+  +dynamic blockTimeSlots()
+  +dynamic getTimeSlotStatistics()
+  +bool canCompleteAppointment()
+  +bool canConfirmAppointment()
+  +bool canCancelAppointment()
+  +bool canMarkAsNoShow()
+  +Color getAppointmentStatusColor()
+  +String getAppointmentStatusText()
+  +DateTime parseAppointmentDateTime()
+  +List<String> getAvailableStatusTransitions()
+  +String getStatusChangeReason()
+}
+
+"salonbook::models::model.dart::Model" o-- "cloud_firestore::cloud_firestore.dart::FirebaseFirestore"
+"salonbook::models::model.dart::Model" o-- "firebase_auth::firebase_auth.dart::FirebaseAuth"
+"salonbook::models::model.dart::Model" o-- "flutter::src::widgets::page_view.dart::PageController"
+"salonbook::models::model.dart::Model" o-- "firebase_auth::firebase_auth.dart::User"
+"salonbook::models::model.dart::Model" o-- "salonbook::models::saloninfo.dart::SalonInfo"
+"flutter::src::foundation::change_notifier.dart::ChangeNotifier" <|-- "salonbook::models::model.dart::Model"
+
+class "salonbook::models::product.dart::Product" {
+  +String id
+  +String name
+  +String description
+  +double price
+  +List<String> images
+  +String categoryId
+  +String categoryName
+  +int stockQuantity
+  +bool isActive
+  +bool isFeatured
+  +Map<String, dynamic> specifications
+  +DateTime createdAt
+  +DateTime updatedAt
+  +Map<String, dynamic> toMap()
+  +Product copyWith()
+}
+
+class "salonbook::models::product.dart::Category" {
+  +String id
+  +String name
+  +String description
+  +String? imageUrl
+  +bool isActive
+  +int sortItemsOrder
+  +DateTime createdAt
+  +Map<String, dynamic> toMap()
+}
+
+class "salonbook::models::product.dart::CartItem" {
+  +String productId
+  +String productName
+  +double price
+  +String? imageUrl
+  +int quantity
+  +int maxStock
+  +double totalPrice
+  +Map<String, dynamic> toMap()
+}
+
+class "salonbook::models::product.dart::ItemsOrder" {
+  +String id
+  +String userId
+  +String userEmail
+  +String userName
+  +List<OrderItem> items
+  +double subtotal
+  +double tax
+  +double shipping
+  +double total
+  +String status
+  +String paymentStatus
+  +String? paymentIntentId
+  +Map<String, dynamic> shippingAddress
+  +Map<String, dynamic> billingAddress
+  +String? notes
+  +DateTime createdAt
+  +DateTime updatedAt
+  +Map<String, dynamic> toMap()
+}
+
+class "salonbook::models::product.dart::OrderItem" {
+  +String productId
+  +String productName
+  +double price
+  +int quantity
+  +String? imageUrl
+  +double totalPrice
+  +Map<String, dynamic> toMap()
+}
+
+class "salonbook::models::saloninfo.dart::SalonInfo" {
+  +String name
+  +String address
+  +String phone
+  +String email
+  +Map<String, dynamic> openHours
+  +String description
+  +List<String> images
+}
+
+class "salonbook::models::service.dart::Service" {
+  +String id
+  +String name
+  +String description
+  +double price
+  +int duration
+  +String gender
+  +String? imageUrl
+  +bool isActive
+  +Map<String, dynamic> toMap()
+}
+
+class "salonbook::pages::admin::add_edit_product_screen.dart::AddEditProductScreen" {
+  +Product? product
+  +State<AddEditProductScreen> createState()
+}
+
+"salonbook::pages::admin::add_edit_product_screen.dart::AddEditProductScreen" o-- "salonbook::models::product.dart::Product"
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "salonbook::pages::admin::add_edit_product_screen.dart::AddEditProductScreen"
+
+class "salonbook::pages::admin::add_edit_product_screen.dart::_AddEditProductScreenState" {
+  -GlobalKey<FormState> _formKey
+  -TextEditingController _nameController
+  -TextEditingController _descriptionController
+  -TextEditingController _priceController
+  -TextEditingController _stockController
+  -TextEditingController _imageUrlController
+  -String? _selectedCategoryId
+  -String _selectedCategoryName
+  -bool _isFeatured
+  -bool _isActive
+  -List<String> _imageUrls
+  -List<Category> _categories
+  -bool _isLoading
+  +void initState()
+  -dynamic _loadCategories()
+  -void _initializeForm()
+  +void dispose()
+  +Widget build()
+  -Widget _buildBasicInfoSection()
+  -Widget _buildImagesSection()
+  -Widget _buildCategorySection()
+  -Widget _buildInventorySection()
+  -Widget _buildSettingsSection()
+  -Widget _buildSaveButton()
+  -dynamic _saveProduct()
+  -void _showDeleteDialog()
+}
+
+"salonbook::pages::admin::add_edit_product_screen.dart::_AddEditProductScreenState" o-- "flutter::src::widgets::framework.dart::GlobalKey<FormState>"
+"salonbook::pages::admin::add_edit_product_screen.dart::_AddEditProductScreenState" o-- "flutter::src::widgets::editable_text.dart::TextEditingController"
+"flutter::src::widgets::framework.dart::State" <|-- "salonbook::pages::admin::add_edit_product_screen.dart::_AddEditProductScreenState"
+
+class "salonbook::pages::admin::add_edit_services.dart::AddEditServiceScreen" {
+  +Service? service
+  +State<AddEditServiceScreen> createState()
+}
+
+"salonbook::pages::admin::add_edit_services.dart::AddEditServiceScreen" o-- "salonbook::models::service.dart::Service"
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "salonbook::pages::admin::add_edit_services.dart::AddEditServiceScreen"
+
+class "salonbook::pages::admin::add_edit_services.dart::_AddEditServiceScreenState" {
+  -GlobalKey<FormState> _formKey
+  -TextEditingController _nameController
+  -TextEditingController _descriptionController
+  -TextEditingController _priceController
+  -TextEditingController _durationController
+  -String _selectedGender
+  -bool _isActive
+  +void initState()
+  +void dispose()
+  +Widget build()
+}
+
+"salonbook::pages::admin::add_edit_services.dart::_AddEditServiceScreenState" o-- "flutter::src::widgets::framework.dart::GlobalKey<FormState>"
+"salonbook::pages::admin::add_edit_services.dart::_AddEditServiceScreenState" o-- "flutter::src::widgets::editable_text.dart::TextEditingController"
+"flutter::src::widgets::framework.dart::State" <|-- "salonbook::pages::admin::add_edit_services.dart::_AddEditServiceScreenState"
+
+class "salonbook::pages::admin::admin_calendar.dart::AdminCalendarScreen" {
+  +State<AdminCalendarScreen> createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "salonbook::pages::admin::admin_calendar.dart::AdminCalendarScreen"
+
+class "salonbook::pages::admin::admin_calendar.dart::_AdminCalendarScreenState" {
+  -DateTime _selectedDay
+  -DateTime _focusedDay
+  -List<Appointment> _selectedDayAppointments
+  -bool _isLoading
+  +void initState()
+  -dynamic _loadAppointments()
+  +Widget build()
+  -Widget _buildCalendar()
+  -Widget _buildSelectedDateHeader()
+  -Widget _buildAppointmentsList()
+  -Widget _buildAppointmentCard()
+  -Widget _buildStatusBadge()
+  -Widget _buildActionButtons()
+  -Widget _buildActionButton()
+  -Widget _buildNoActionsAvailable()
+  -Map<String, dynamic> _getButtonConfig()
+  -dynamic _showStatusChangeDialog()
+}
+
+"flutter::src::widgets::framework.dart::State" <|-- "salonbook::pages::admin::admin_calendar.dart::_AdminCalendarScreenState"
+
+class "salonbook::pages::admin::admin_create_appointment.dart::AdminCreateAppointmentScreen" {
+  +State<AdminCreateAppointmentScreen> createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "salonbook::pages::admin::admin_create_appointment.dart::AdminCreateAppointmentScreen"
+
+class "salonbook::pages::admin::admin_create_appointment.dart::_AdminCreateAppointmentScreenState" {
+  -GlobalKey<FormState> _formKey
+  -String? _selectedClientEmail
+  -Service? _selectedService
+  -DateTime _selectedDate
+  -String? _selectedTimeSlot
+  -TextEditingController _notesController
+  -List<Map<String, dynamic>> _clients
+  -List<Service> _services
+  -List<String> _availableTimeSlots
+  -bool _isLoading
+  -bool _isLoadingTimeSlots
+  +void initState()
+  -dynamic _loadInitialData()
+  -dynamic _loadClients()
+  -dynamic _loadTimeSlots()
+  +void dispose()
+  +Widget build()
+  -Widget _buildSectionTitle()
+  -Widget _buildClientDropdown()
+  -Widget _buildServiceDropdown()
+  -Widget _buildDatePicker()
+  -Widget _buildTimeSlotGrid()
+  -bool _canCreateAppointment()
+  -dynamic _createAppointment()
+}
+
+"salonbook::pages::admin::admin_create_appointment.dart::_AdminCreateAppointmentScreenState" o-- "flutter::src::widgets::framework.dart::GlobalKey<FormState>"
+"salonbook::pages::admin::admin_create_appointment.dart::_AdminCreateAppointmentScreenState" o-- "salonbook::models::service.dart::Service"
+"salonbook::pages::admin::admin_create_appointment.dart::_AdminCreateAppointmentScreenState" o-- "flutter::src::widgets::editable_text.dart::TextEditingController"
+"flutter::src::widgets::framework.dart::State" <|-- "salonbook::pages::admin::admin_create_appointment.dart::_AdminCreateAppointmentScreenState"
+
+class "salonbook::pages::admin::admin_dashboard.dart::AdminDashboard" {
+  +State<AdminDashboard> createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "salonbook::pages::admin::admin_dashboard.dart::AdminDashboard"
+
+class "salonbook::pages::admin::admin_dashboard.dart::_AdminDashboardState" {
+  -TabController _tabController
+  -dynamic _appointmentsFuture
+  -dynamic _analyticsFuture
+  +void initState()
+  -void _loadData()
+  +void dispose()
+  +Widget build()
+  -Widget _buildFloatingActionButton()
+  -void _showStoreQuickActions()
+  -Widget _buildAppointmentsTab()
+  -Widget _buildStoreTab()
+  -Widget _buildTodayHeader()
+  -Widget _buildStoreHeader()
+  -Widget _buildAppointmentStats()
+  -Widget _buildStoreStats()
+  -Widget _buildStatCard()
+  -Widget _buildQuickActionsGrid()
+  -Widget _buildActionCard()
+  -Widget _buildTodayAppointments()
+  -Widget _buildRecentOrders()
+  -Widget _buildAppointmentCard()
+  -Map<String, dynamic> _getQuickActionConfig()
+  -String _getWaitMessage()
+  -String _getTimeUntil()
+  -dynamic _quickUpdateStatus()
+  -Color _getAppointmentStatusColor()
+  -Color _getOrderStatusColor()
+}
+
+"salonbook::pages::admin::admin_dashboard.dart::_AdminDashboardState" o-- "flutter::src::material::tab_controller.dart::TabController"
+"flutter::src::widgets::framework.dart::State" <|-- "salonbook::pages::admin::admin_dashboard.dart::_AdminDashboardState"
+"flutter::src::widgets::ticker_provider.dart::SingleTickerProviderStateMixin" <|-- "salonbook::pages::admin::admin_dashboard.dart::_AdminDashboardState"
+
+class "salonbook::pages::admin::admin_services_screen.dart::AdminServicesScreen" {
+  +State<AdminServicesScreen> createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "salonbook::pages::admin::admin_services_screen.dart::AdminServicesScreen"
+
+class "salonbook::pages::admin::admin_services_screen.dart::_AdminServicesScreenState" {
+  -dynamic _servicesFuture
+  +void initState()
+  +Widget build()
+  -Widget _buildServiceCard()
+}
+
+"flutter::src::widgets::framework.dart::State" <|-- "salonbook::pages::admin::admin_services_screen.dart::_AdminServicesScreenState"
+
+class "salonbook::pages::admin::admin_store_dashboard.dart::AdminStoreDashboard" {
+  +State<AdminStoreDashboard> createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "salonbook::pages::admin::admin_store_dashboard.dart::AdminStoreDashboard"
+
+class "salonbook::pages::admin::admin_store_dashboard.dart::_AdminStoreDashboardState" {
+  -dynamic _analyticsFuture
+  +void initState()
+  +Widget build()
+  -Widget _buildHeader()
+  -Widget _buildAnalyticsSection()
+  -Widget _buildAnalyticsCard()
+  -Widget _buildQuickActions()
+  -Widget _buildActionCard()
+  -Widget _buildRecentOrders()
+  -Color _getOrderStatusColor()
+}
+
+"flutter::src::widgets::framework.dart::State" <|-- "salonbook::pages::admin::admin_store_dashboard.dart::_AdminStoreDashboardState"
+
+class "salonbook::pages::admin::manage_products_screen.dart::ManageProductsScreen" {
+  +State<ManageProductsScreen> createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "salonbook::pages::admin::manage_products_screen.dart::ManageProductsScreen"
+
+class "salonbook::pages::admin::manage_products_screen.dart::_ManageProductsScreenState" {
+  -dynamic _productsFuture
+  -String _searchQuery
+  -String? _selectedCategoryId
+  +void initState()
+  -void _loadProducts()
+  +Widget build()
+  -Widget _buildSearchAndFilter()
+  -List<Product> _filterProducts()
+  -Widget _buildEmptyState()
+  -Widget _buildProductCard()
+  -void _showStockDialog()
+  -void _showDeleteDialog()
+}
+
+"flutter::src::widgets::framework.dart::State" <|-- "salonbook::pages::admin::manage_products_screen.dart::_ManageProductsScreenState"
+
+class "salonbook::pages::admin::orders_management_screen.dart::OrdersManagementScreen" {
+  +State<OrdersManagementScreen> createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "salonbook::pages::admin::orders_management_screen.dart::OrdersManagementScreen"
+
+class "salonbook::pages::admin::orders_management_screen.dart::_OrdersManagementScreenState" {
+  -dynamic _ordersFuture
+  -String _selectedStatus
+  -String _searchQuery
+  +void initState()
+  -void _loadOrders()
+  +Widget build()
+  -Widget _buildFilterSection()
+  -Widget _buildStatusChip()
+  -List<ItemsOrder> _filterOrders()
+  -Widget _buildEmptyState()
+  -Widget _buildOrderCard()
+  -Widget _buildInfoSection()
+  -Widget _buildOrderItems()
+  -Widget _buildOrderSummary()
+  -Widget _buildSummaryRow()
+  -Widget _buildPaymentStatus()
+  -Widget _buildStatusButtons()
+  -Widget _buildActionButton()
+  -dynamic _updateOrderStatus()
+  -void _showCancelDialog()
+  -Color _getOrderStatusColor()
+}
+
+"flutter::src::widgets::framework.dart::State" <|-- "salonbook::pages::admin::orders_management_screen.dart::_OrdersManagementScreenState"
+
+class "salonbook::pages::admin::manage_categories_screen.dart::ManageCategoriesScreen" {
+  +State<ManageCategoriesScreen> createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "salonbook::pages::admin::manage_categories_screen.dart::ManageCategoriesScreen"
+
+class "salonbook::pages::admin::manage_categories_screen.dart::_ManageCategoriesScreenState" {
+  -dynamic _categoriesFuture
+  +void initState()
+  -void _loadCategories()
+  +Widget build()
+  -Widget _buildEmptyState()
+  -Widget _buildCategoryCard()
+  -void _reorderCategories()
+  -dynamic _saveReorderedCategories()
+  -void _showAddCategoryDialog()
+  -void _showEditCategoryDialog()
+  -void _showCategoryDialog()
+  -void _showDeleteDialog()
+}
+
+"flutter::src::widgets::framework.dart::State" <|-- "salonbook::pages::admin::manage_categories_screen.dart::_ManageCategoriesScreenState"
+
+class "salonbook::pages::admin::time_slot_management_screen.dart::TimeSlotManagementScreen" {
+  +State<TimeSlotManagementScreen> createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "salonbook::pages::admin::time_slot_management_screen.dart::TimeSlotManagementScreen"
+
+class "salonbook::pages::admin::time_slot_management_screen.dart::_TimeSlotManagementScreenState" {
+  -bool _isGenerating
+  -bool _isLoadingStats
+  -Map<String, dynamic> _statistics
+  -List<String> _logs
+  +void initState()
+  -dynamic _loadStatistics()
+  -dynamic _generateTimeSlots()
+  -void _addLog()
+  +Widget build()
+  -Widget _buildHeaderSection()
+  -Widget _buildStatisticsSection()
+  -Widget _buildStatsGrid()
+  -Widget _buildStatCard()
+  -Widget _buildGenerationSection()
+  -Widget _buildLogsSection()
+  -Widget _buildManagementSection()
+  -Widget _buildActionButton()
+  -void _showBlockDatesDialog()
+}
+
+"flutter::src::widgets::framework.dart::State" <|-- "salonbook::pages::admin::time_slot_management_screen.dart::_TimeSlotManagementScreenState"
+
+class "salonbook::pages::auth::auth_check.dart::AuthCheck" {
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "salonbook::pages::auth::auth_check.dart::AuthCheck"
+
+class "salonbook::pages::auth::login.dart::Login" {
+  +AdaptiveThemeMode? savedThemeMode
+  -GlobalKey<FormState> _formKey
+  -TextEditingController _emailTextController
+  -TextEditingController _passwordTextController
+  -FocusNode _focusEmail
+  -FocusNode _focusPassword
+  +Widget build()
+}
+
+"salonbook::pages::auth::login.dart::Login" o-- "adaptive_theme::src::adaptive_theme_mode.dart::AdaptiveThemeMode"
+"salonbook::pages::auth::login.dart::Login" o-- "flutter::src::widgets::framework.dart::GlobalKey<FormState>"
+"salonbook::pages::auth::login.dart::Login" o-- "flutter::src::widgets::editable_text.dart::TextEditingController"
+"salonbook::pages::auth::login.dart::Login" o-- "flutter::src::widgets::focus_manager.dart::FocusNode"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "salonbook::pages::auth::login.dart::Login"
+
+class "salonbook::pages::auth::recover_account.dart::RecoverAccount" {
+  -GlobalKey<FormState> _formKey
+  -TextEditingController _emailTextController
+  -FocusNode _focusEmail
+  +Widget build()
+}
+
+"salonbook::pages::auth::recover_account.dart::RecoverAccount" o-- "flutter::src::widgets::framework.dart::GlobalKey<FormState>"
+"salonbook::pages::auth::recover_account.dart::RecoverAccount" o-- "flutter::src::widgets::editable_text.dart::TextEditingController"
+"salonbook::pages::auth::recover_account.dart::RecoverAccount" o-- "flutter::src::widgets::focus_manager.dart::FocusNode"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "salonbook::pages::auth::recover_account.dart::RecoverAccount"
+
+class "salonbook::pages::auth::register.dart::Register" {
+  +State<Register> createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "salonbook::pages::auth::register.dart::Register"
+
+class "salonbook::pages::auth::register.dart::_RegisterState" {
+  -GlobalKey<FormState> _formKey
+  -TextEditingController _nameTextController
+  -TextEditingController _emailTextController
+  -TextEditingController _passwordTextController
+  -TextEditingController _phoneNumberTextController
+  -FocusNode _focusName
+  -FocusNode _focusEmail
+  -FocusNode _focusPassword
+  -FocusNode _focusPhoneNumber
+  -String _selectedGender
+  +Widget build()
+  +void dispose()
+}
+
+"salonbook::pages::auth::register.dart::_RegisterState" o-- "flutter::src::widgets::framework.dart::GlobalKey<FormState>"
+"salonbook::pages::auth::register.dart::_RegisterState" o-- "flutter::src::widgets::editable_text.dart::TextEditingController"
+"salonbook::pages::auth::register.dart::_RegisterState" o-- "flutter::src::widgets::focus_manager.dart::FocusNode"
+"flutter::src::widgets::framework.dart::State" <|-- "salonbook::pages::auth::register.dart::_RegisterState"
+
+class "salonbook::pages::client::appointment.dart::AppointmentsScreen" {
+  +State<AppointmentsScreen> createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "salonbook::pages::client::appointment.dart::AppointmentsScreen"
+
+class "salonbook::pages::client::appointment.dart::_AppointmentsScreenState" {
+  -dynamic _appointmentsFuture
+  +void initState()
+  +Widget build()
+  -Widget _buildAppointmentsList()
+  -Widget _buildEmptyState()
+  -Widget _buildAppointmentCard()
+  -Color _getStatusColor()
+  -String _getStatusText()
+  -void _showCancelDialog()
+}
+
+"flutter::src::widgets::framework.dart::State" <|-- "salonbook::pages::client::appointment.dart::_AppointmentsScreenState"
+
+class "salonbook::pages::client::appointment_confirmation.dart::AppointmentConfirmationScreen" {
+  +Service service
+  +DateTime date
+  +String timeSlot
+  +Widget build()
+  -Widget _buildSuccessIcon()
+  -Widget _buildAppointmentDetails()
+  -Widget _buildDetailRow()
+  -Widget _buildButtons()
+}
+
+"salonbook::pages::client::appointment_confirmation.dart::AppointmentConfirmationScreen" o-- "salonbook::models::service.dart::Service"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "salonbook::pages::client::appointment_confirmation.dart::AppointmentConfirmationScreen"
+
+class "salonbook::pages::client::cart_screen.dart::CartScreen" {
+  +State<CartScreen> createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "salonbook::pages::client::cart_screen.dart::CartScreen"
+
+class "salonbook::pages::client::cart_screen.dart::_CartScreenState" {
+  +Widget build()
+  -Widget _buildEmptyCart()
+  -Widget _buildCartItem()
+  -Widget _buildCartSummary()
+  -Widget _buildSummaryRow()
+  -void _showRemoveItemDialog()
+  -void _showClearCartDialog()
+}
+
+"flutter::src::widgets::framework.dart::State" <|-- "salonbook::pages::client::cart_screen.dart::_CartScreenState"
+
+class "salonbook::pages::client::checkout_screen.dart::CheckoutScreen" {
+  +double subtotal
+  +double tax
+  +double shipping
+  +double total
+  +State<CheckoutScreen> createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "salonbook::pages::client::checkout_screen.dart::CheckoutScreen"
+
+class "salonbook::pages::client::checkout_screen.dart::_CheckoutScreenState" {
+  -GlobalKey<FormState> _formKey
+  -PageController _pageController
+  -TextEditingController _shippingNameController
+  -TextEditingController _shippingAddressController
+  -TextEditingController _shippingCityController
+  -TextEditingController _shippingStateController
+  -TextEditingController _shippingZipController
+  -TextEditingController _shippingPhoneController
+  -TextEditingController _billingNameController
+  -TextEditingController _billingAddressController
+  -TextEditingController _billingCityController
+  -TextEditingController _billingStateController
+  -TextEditingController _billingZipController
+  -TextEditingController _cardNumberController
+  -TextEditingController _expiryController
+  -TextEditingController _cvvController
+  -TextEditingController _cardNameController
+  -TextEditingController _notesController
+  -bool _sameBillingAddress
+  -bool _isProcessingPayment
+  -int _currentStep
+  +void initState()
+  -dynamic _loadUserInfo()
+  +void dispose()
+  +Widget build()
+  -Widget _buildProgressIndicator()
+  -Widget _buildStepIndicator()
+  -Widget _buildShippingAddressStep()
+  -Widget _buildBillingAddressFields()
+  -Widget _buildPaymentStep()
+  -Widget _buildReviewStep()
+  -Widget _buildSummaryRow()
+  -Widget _buildBottomBar()
+  -void _copyShippingToBilling()
+  -dynamic _handleNextStep()
+  -dynamic _placeOrder()
+}
+
+"salonbook::pages::client::checkout_screen.dart::_CheckoutScreenState" o-- "flutter::src::widgets::framework.dart::GlobalKey<FormState>"
+"salonbook::pages::client::checkout_screen.dart::_CheckoutScreenState" o-- "flutter::src::widgets::page_view.dart::PageController"
+"salonbook::pages::client::checkout_screen.dart::_CheckoutScreenState" o-- "flutter::src::widgets::editable_text.dart::TextEditingController"
+"flutter::src::widgets::framework.dart::State" <|-- "salonbook::pages::client::checkout_screen.dart::_CheckoutScreenState"
+
+class "salonbook::pages::client::date_selection.dart::DateSelectionScreen" {
+  +Service service
+  +State<DateSelectionScreen> createState()
+}
+
+"salonbook::pages::client::date_selection.dart::DateSelectionScreen" o-- "salonbook::models::service.dart::Service"
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "salonbook::pages::client::date_selection.dart::DateSelectionScreen"
+
+class "salonbook::pages::client::date_selection.dart::_DateSelectionScreenState" {
+  -DateTime _selectedDate
+  -DateTime _focusedDay
+  -SalonInfo? _salonInfo
+  -bool _isLoading
+  +void initState()
+  -DateTime _getValidFutureDate()
+  -dynamic _loadSalonInfo()
+  -bool _isDateAvailable()
+  +Widget build()
+  -Widget _buildServiceHeader()
+  -Widget _buildCalendar()
+  -Widget _buildContinueButton()
+}
+
+"salonbook::pages::client::date_selection.dart::_DateSelectionScreenState" o-- "salonbook::models::saloninfo.dart::SalonInfo"
+"flutter::src::widgets::framework.dart::State" <|-- "salonbook::pages::client::date_selection.dart::_DateSelectionScreenState"
+
+class "salonbook::pages::client::product_details_screen.dart::ProductDetailScreen" {
+  +Product product
+  +State<ProductDetailScreen> createState()
+}
+
+"salonbook::pages::client::product_details_screen.dart::ProductDetailScreen" o-- "salonbook::models::product.dart::Product"
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "salonbook::pages::client::product_details_screen.dart::ProductDetailScreen"
+
+class "salonbook::pages::client::product_details_screen.dart::_ProductDetailScreenState" {
+  -int _quantity
+  -int _currentImageIndex
+  -PageController _pageController
+  +void dispose()
+  +Widget build()
+  -Widget _buildAppBar()
+  -Widget _buildImageCarousel()
+  -Widget _buildProductInfo()
+  -Widget _buildQuantitySelector()
+  -Widget _buildDescription()
+  -Widget _buildSpecifications()
+  -Widget _buildStockInfo()
+  -Widget _buildBottomBar()
+}
+
+"salonbook::pages::client::product_details_screen.dart::_ProductDetailScreenState" o-- "flutter::src::widgets::page_view.dart::PageController"
+"flutter::src::widgets::framework.dart::State" <|-- "salonbook::pages::client::product_details_screen.dart::_ProductDetailScreenState"
+
+class "salonbook::pages::client::profile.dart::ProfileScreen" {
+  +State<ProfileScreen> createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "salonbook::pages::client::profile.dart::ProfileScreen"
+
+class "salonbook::pages::client::profile.dart::_ProfileScreenState" {
+  -dynamic _userInfoFuture
+  +void initState()
+  +Widget build()
+  -Widget _buildProfileHeader()
+  -Widget _buildProfileInfo()
+  -Widget _buildInfoRow()
+  -Widget _buildSignOutButton()
+}
+
+"flutter::src::widgets::framework.dart::State" <|-- "salonbook::pages::client::profile.dart::_ProfileScreenState"
+
+class "salonbook::pages::client::service_selection.dart::ServiceSelectionScreen" {
+  +Service? initialSelectedService
+  +State<ServiceSelectionScreen> createState()
+}
+
+"salonbook::pages::client::service_selection.dart::ServiceSelectionScreen" o-- "salonbook::models::service.dart::Service"
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "salonbook::pages::client::service_selection.dart::ServiceSelectionScreen"
+
+class "salonbook::pages::client::service_selection.dart::_ServiceSelectionScreenState" {
+  -dynamic _servicesFuture
+  +void initState()
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::State" <|-- "salonbook::pages::client::service_selection.dart::_ServiceSelectionScreenState"
+
+class "salonbook::pages::client::service_selection.dart::ServiceCard" {
+  +Service service
+  +void Function() onTap
+  +Widget build()
+}
+
+"salonbook::pages::client::service_selection.dart::ServiceCard" o-- "salonbook::models::service.dart::Service"
+"salonbook::pages::client::service_selection.dart::ServiceCard" o-- "dart::ui::void Function()"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "salonbook::pages::client::service_selection.dart::ServiceCard"
+
+class "salonbook::pages::client::store_screen.dart::StoreScreen" {
+  +State<StoreScreen> createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "salonbook::pages::client::store_screen.dart::StoreScreen"
+
+class "salonbook::pages::client::store_screen.dart::_StoreScreenState" {
+  -dynamic _productsFuture
+  -dynamic _categoriesFuture
+  -dynamic _featuredProductsFuture
+  -String? _selectedCategoryId
+  +void initState()
+  -void _loadData()
+  +Widget build()
+  -Widget _buildAppBar()
+  -Widget _buildFeaturedSection()
+  -Widget _buildFeaturedProductCard()
+  -Widget _buildCategoriesSection()
+  -Widget _buildCategoryChip()
+  -Widget _buildProductsSection()
+  -Widget _buildProductCard()
+  -Widget _buildEmptyState()
+}
+
+"flutter::src::widgets::framework.dart::State" <|-- "salonbook::pages::client::store_screen.dart::_StoreScreenState"
+
+class "salonbook::pages::client::time_selection.dart::TimeSelectionScreen" {
+  +Service service
+  +DateTime selectedDate
+  +State<TimeSelectionScreen> createState()
+}
+
+"salonbook::pages::client::time_selection.dart::TimeSelectionScreen" o-- "salonbook::models::service.dart::Service"
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "salonbook::pages::client::time_selection.dart::TimeSelectionScreen"
+
+class "salonbook::pages::client::time_selection.dart::_TimeSelectionScreenState" {
+  -String? _selectedTimeSlot
+  -bool _isLoading
+  -List<String> _availableTimeSlots
+  +void initState()
+  -dynamic _loadTimeSlots()
+  -bool _isToday()
+  -bool _isTooLateToday()
+  +Widget build()
+  -Widget _buildServiceAndDateHeader()
+  -Widget _buildNoTimeSlotsAvailable()
+  -Widget _buildTimeSlotGrid()
+  -Widget _buildBookButton()
+  -dynamic _bookAppointment()
+}
+
+"flutter::src::widgets::framework.dart::State" <|-- "salonbook::pages::client::time_selection.dart::_TimeSelectionScreenState"
+
+class "salonbook::pages::client::orders_confirmation_screen.dart::OrderConfirmationScreen" {
+  +String orderId
+  +double total
+  +State<OrderConfirmationScreen> createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "salonbook::pages::client::orders_confirmation_screen.dart::OrderConfirmationScreen"
+
+class "salonbook::pages::client::orders_confirmation_screen.dart::_OrderConfirmationScreenState" {
+  -ConfettiController _confettiController
+  -AnimationController _scaleController
+  -Animation<double> _scaleAnimation
+  +void initState()
+  +void dispose()
+  +Widget build()
+  -Widget _buildSuccessSection()
+  -Widget _buildOrderDetails()
+  -Widget _buildDetailRow()
+  -Widget _buildActionButtons()
+  -void _showRatingDialog()
+}
+
+"salonbook::pages::client::orders_confirmation_screen.dart::_OrderConfirmationScreenState" o-- "confetti::src::confetti.dart::ConfettiController"
+"salonbook::pages::client::orders_confirmation_screen.dart::_OrderConfirmationScreenState" o-- "flutter::src::animation::animation_controller.dart::AnimationController"
+"salonbook::pages::client::orders_confirmation_screen.dart::_OrderConfirmationScreenState" o-- "flutter::src::animation::animation.dart::Animation<double>"
+"flutter::src::widgets::framework.dart::State" <|-- "salonbook::pages::client::orders_confirmation_screen.dart::_OrderConfirmationScreenState"
+"flutter::src::widgets::ticker_provider.dart::TickerProviderStateMixin" <|-- "salonbook::pages::client::orders_confirmation_screen.dart::_OrderConfirmationScreenState"
+
+class "salonbook::pages::client::search_products_screen.dart::SearchProductsScreen" {
+  +State<SearchProductsScreen> createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "salonbook::pages::client::search_products_screen.dart::SearchProductsScreen"
+
+class "salonbook::pages::client::search_products_screen.dart::_SearchProductsScreenState" {
+  -TextEditingController _searchController
+  -FocusNode _focusNode
+  -List<Product> _searchResults
+  -List<String> _recentSearches
+  -bool _isSearching
+  -bool _showFilters
+  -double _minPrice
+  -double _maxPrice
+  -String? _selectedCategoryId
+  -bool _inStockOnly
+  -String _sortBy
+  +void initState()
+  +void dispose()
+  -void _loadRecentSearches()
+  -dynamic _performSearch()
+  -List<Product> _applyFilters()
+  -List<Product> _applySorting()
+  -void _addToRecentSearches()
+  +Widget build()
+  -Widget _buildSearchBar()
+  -Widget _buildFiltersSection()
+  -Widget _buildRecentSearches()
+  -Widget _buildLoadingState()
+  -Widget _buildNoResults()
+  -Widget _buildSearchResults()
+  -Widget _buildProductCard()
+}
+
+"salonbook::pages::client::search_products_screen.dart::_SearchProductsScreenState" o-- "flutter::src::widgets::editable_text.dart::TextEditingController"
+"salonbook::pages::client::search_products_screen.dart::_SearchProductsScreenState" o-- "flutter::src::widgets::focus_manager.dart::FocusNode"
+"flutter::src::widgets::framework.dart::State" <|-- "salonbook::pages::client::search_products_screen.dart::_SearchProductsScreenState"
+
+class "salonbook::pages::client::edit_profile.dart::EditProfileScreen" {
+  +State<EditProfileScreen> createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "salonbook::pages::client::edit_profile.dart::EditProfileScreen"
+
+class "salonbook::pages::client::edit_profile.dart::_EditProfileScreenState" {
+  -GlobalKey<FormState> _formKey
+  -TextEditingController _nameController
+  -TextEditingController _phoneController
+  -String _selectedGender
+  -bool _isLoading
+  +void initState()
+  -dynamic _loadUserInfo()
+  +void dispose()
+  +Widget build()
+}
+
+"salonbook::pages::client::edit_profile.dart::_EditProfileScreenState" o-- "flutter::src::widgets::framework.dart::GlobalKey<FormState>"
+"salonbook::pages::client::edit_profile.dart::_EditProfileScreenState" o-- "flutter::src::widgets::editable_text.dart::TextEditingController"
+"flutter::src::widgets::framework.dart::State" <|-- "salonbook::pages::client::edit_profile.dart::_EditProfileScreenState"
+
+class "salonbook::pages::client::my_orders_screen.dart::MyOrdersScreen" {
+  +State<MyOrdersScreen> createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "salonbook::pages::client::my_orders_screen.dart::MyOrdersScreen"
+
+class "salonbook::pages::client::my_orders_screen.dart::_MyOrdersScreenState" {
+  -dynamic _ordersFuture
+  +void initState()
+  -void _loadOrders()
+  +Widget build()
+  -Widget _buildEmptyState()
+  -Widget _buildOrderCard()
+  -Widget _buildOrderItems()
+  -Widget _buildOrderSummary()
+  -Widget _buildSummaryRow()
+  -Widget _buildShippingInfo()
+  -Widget _buildPaymentStatus()
+  -Widget _buildOrderTracking()
+  -Widget _buildActionButtons()
+  -void _showCancelDialog()
+  -void _reorderItems()
+  -void _contactSupport()
+  -void _downloadReceipt()
+  -Color _getOrderStatusColor()
+  -String _getOrderStatusText()
+}
+
+"flutter::src::widgets::framework.dart::State" <|-- "salonbook::pages::client::my_orders_screen.dart::_MyOrdersScreenState"
+
+class "salonbook::pages::auth_page.dart::LoginRegister" {
+  +AdaptiveThemeMode? savedThemeMode
+  +Widget build()
+}
+
+"salonbook::pages::auth_page.dart::LoginRegister" o-- "adaptive_theme::src::adaptive_theme_mode.dart::AdaptiveThemeMode"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "salonbook::pages::auth_page.dart::LoginRegister"
+
+class "salonbook::pages::salonbook.dart::SalonBook" {
+  +State<SalonBook> createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "salonbook::pages::salonbook.dart::SalonBook"
+
+class "salonbook::pages::salonbook.dart::_SalonBookState" {
+  -int _selectedIndex
+  -dynamic _salonInfoFuture
+  -dynamic _servicesFuture
+  -dynamic _appointmentsFuture
+  -dynamic _userInfoFuture
+  +dynamic model
+  +void initState()
+  -void _loadData()
+  -void _refreshDataOnTabChange()
+  +Widget build()
+  -Widget _buildHomeTab()
+  -Widget _buildQuickActionsSection()
+  -Widget _buildQuickActionCard()
+  -Widget _buildFeaturedProductsSection()
+  -Widget _buildSectionTitle()
+  -Widget _buildFeaturedServicesSection()
+  -Widget _buildServiceCard()
+  -Widget _buildEmptyAppointmentState()
+  -Widget _buildUpcomingAppointmentSection()
+  -Widget _buildSpecialOffersSection()
+  -Widget _buildSalonInfoSection()
+  -bool _isToday()
+}
+
+"flutter::src::widgets::framework.dart::State" <|-- "salonbook::pages::salonbook.dart::_SalonBookState"
+
+class "salonbook::resources::validator.dart::Validator" {
+  {static} +String? validateName()
+  {static} +String? validateEmail()
+  {static} +String? validatePassword()
+  {static} +String? validatePhoneNumber()
+}
+
+class "salonbook::resources::firebase_options.dart::DefaultFirebaseOptions" {
+  {static} +FirebaseOptions android
+  {static} +FirebaseOptions ios
+  {static} +FirebaseOptions currentPlatform
+}
+
+"salonbook::resources::firebase_options.dart::DefaultFirebaseOptions" o-- "firebase_core_platform_interface::firebase_core_platform_interface.dart::FirebaseOptions"
+
+class "salonbook::widgets::custom_modal_bottom_sheet.dart::CustomBottomSheet" {
+  +List<Widget> listChild
+  +Color? backgroundColor
+  +double borderRadius
+  +EdgeInsetsGeometry padding
+  +Widget build()
+}
+
+"salonbook::widgets::custom_modal_bottom_sheet.dart::CustomBottomSheet" o-- "dart::ui::Color"
+"salonbook::widgets::custom_modal_bottom_sheet.dart::CustomBottomSheet" o-- "flutter::src::painting::edge_insets.dart::EdgeInsetsGeometry"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "salonbook::widgets::custom_modal_bottom_sheet.dart::CustomBottomSheet"
+
+class "salonbook::widgets::modal_bottom_list_item.dart::ModalBottomListItem" {
+  +Widget leading
+  +Widget title
+  +void Function() onPressed
+  +Color? backgroundColor
+  +Color? hoverColor
+  +double borderRadius
+  +Widget build()
+}
+
+"salonbook::widgets::modal_bottom_list_item.dart::ModalBottomListItem" o-- "flutter::src::widgets::framework.dart::Widget"
+"salonbook::widgets::modal_bottom_list_item.dart::ModalBottomListItem" o-- "dart::ui::void Function()"
+"salonbook::widgets::modal_bottom_list_item.dart::ModalBottomListItem" o-- "dart::ui::Color"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "salonbook::widgets::modal_bottom_list_item.dart::ModalBottomListItem"
+
+class "salonbook::main.dart::Init" {
+  +AdaptiveThemeMode? savedThemeMode
+  +Widget build()
+}
+
+"salonbook::main.dart::Init" o-- "adaptive_theme::src::adaptive_theme_mode.dart::AdaptiveThemeMode"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "salonbook::main.dart::Init"
+
+
+@enduml
