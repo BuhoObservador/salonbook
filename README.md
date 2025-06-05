@@ -5,6 +5,7 @@
   <img src="https://img.shields.io/badge/Firebase-039BE5?style=for-the-badge&logo=Firebase&logoColor=white" alt="Firebase" />
   <img src="https://img.shields.io/badge/dart-%230175C2.svg?style=for-the-badge&logo=dart&logoColor=white" alt="Dart" />
   <img src="https://img.shields.io/badge/Material%20Design-757575?style=for-the-badge&logo=material-design&logoColor=white" alt="Material Design" />
+  <img src="https://img.shields.io/badge/License-GPLv3-blue.svg?style=for-the-badge" alt="GPLv3 License" />
 </div>
 
 <div align="center">
@@ -105,10 +106,10 @@
    ```
 
 3. **Firebase Setup**
-    - Create a Firebase project
-    - Enable Authentication and Firestore
-    - Download `google-services.json` (Android) and `GoogleService-Info.plist` (iOS)
-    - Place files in respective platform directories
+   - Create a Firebase project
+   - Enable Authentication and Firestore
+   - Download `google-services.json` (Android) and `GoogleService-Info.plist` (iOS)
+   - Place files in respective platform directories
 
 4. **Configure Firebase**
    ```bash
@@ -207,11 +208,23 @@ Adjust salon operations in `model.dart`:
 4. Push to branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
+**Note:** By contributing to this project, you agree that your contributions will be licensed under the same GPLv3 license that covers this project.
+
 ---
 
 ## 📄 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the **GNU General Public License v3.0** - see the [LICENSE.md](LICENSE.md) file for details.
+
+### What this means:
+- ✅ **Free to use** - You can use this software for any purpose
+- ✅ **Free to modify** - You can change the code to suit your needs
+- ✅ **Free to distribute** - You can share the original or modified versions
+- ❗ **Copyleft** - If you distribute modified versions, you must also make your source code available under GPLv3
+- ❗ **No warranty** - The software is provided "as is" without any guarantees
+
+### Commercial Use
+This software can be used commercially, but any derivative works must also be released under GPLv3. If you need a different license for commercial use, please contact the author.
 
 ---
 
@@ -225,6 +238,10 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ---
 
 <div align="center">
-  <p>Made with ❤️ and ☕ by <a href="https://github.com/BuhoObservador">Jose Mateo Romero</a></p>
+  <p>Made with ❤️ and ☕ by <a href="https://github.com/BuhoObservador">Jose Mateo Romero</a> • <a href="mailto:otema28@gmail.com">otema28@gmail.com</a></p>
   <p>⭐ Star this repo if you find it helpful!</p>
+
+  <br>
+
+  <p><strong>📜 Licensed under GPLv3 - Free and Open Source Software</strong></p>
 </div>
