@@ -15,6 +15,20 @@
 
 ---
 
+## 📖 Documentation
+
+**📋 [Complete Project Documentation (PDF)](./SalonBook.pdf)**
+
+For detailed information about the project including:
+- Full system analysis and requirements
+- Complete user interface mockups and screenshots
+- Data modeling and use case diagrams
+- Technical specifications and class diagrams
+- Comprehensive user and technical manuals
+- Implementation details and architecture
+
+---
+
 ## 🌟 Features
 
 ### 👥 **Dual Interface System**
@@ -52,7 +66,7 @@
 
 ## 📱 Screenshots
 
-<div align="center">
+<!-- <div align="center">
   <table>
     <tr>
       <td align="center"><strong>Client Home</strong></td>
@@ -65,7 +79,9 @@
       <td><img src="screenshots/admin_dashboard.png" width="250" alt="Admin Dashboard"/></td>
     </tr>
   </table>
-</div>
+</div> -->
+
+> **📸 Screenshots, UI mockups, and visual documentation can be found in the** [complete project documentation (PDF)](./SalonBook.pdf).
 
 ---
 
